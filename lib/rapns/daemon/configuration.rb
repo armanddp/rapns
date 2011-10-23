@@ -5,7 +5,7 @@ module Rapns
 
   module Daemon
     class Configuration
-      attr_accessor :host, :port, :certificate, :certificate_password, :poll, :airbrake_notify, :connections
+      attr_accessor :host, :port, :certificate, :certificate_password, :poll, :airbrake_notify, :connections, :pid_file
       alias_method  :airbrake_notify?, :airbrake_notify
 
       def initialize(environment, config_path)
@@ -24,6 +24,7 @@ module Rapns
         set_variable(:certificate_password, config, :optional => true, :default => "")
         set_variable(:poll, config, :optional => true, :default => 2)
         set_variable(:connections, config, :optional => true, :default => 3)
+        set_variable(:pid_file, config, :optional => true, :default => "")
       end
 
       def certificate
@@ -31,6 +32,16 @@ module Rapns
           @certificate
         else
           File.join(Rails.root, "config", "rapns", @certificate)
+        end
+      end
+
+      def pid_file
+        return if @pid_file.blank?
+
+        if Pathname.new(@pid_file).absolute?
+          @pid_file
+        else
+          File.join(Rails.root, @pid_file)
         end
       end
 

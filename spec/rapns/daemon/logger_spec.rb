@@ -88,9 +88,23 @@ describe Rapns::Daemon::Logger do
     logger.error(e)
   end
 
+  it "should not notify Airbrake if explicitly disabled in the call to error" do
+    e = RuntimeError.new("hi mom")
+    logger = Rapns::Daemon::Logger.new(:foreground => false, :airbrake_notify => true)
+    Airbrake.should_not_receive(:notify).with(e)
+    logger.error(e, :airbrake_notify => false)
+  end
+
   it "should not attempt to notify Airbrake of the error is not an Exception" do
     logger = Rapns::Daemon::Logger.new(:foreground => false)
     Airbrake.should_not_receive(:notify)
     logger.error("string error message")
+  end
+
+  it 'defaults auto_flushing to true if the Rails logger does not respond to auto_flushing' do
+    rails_logger = mock(:info => nil, :error => nil, :level => 0)
+    Rails.logger = rails_logger
+    logger = Rapns::Daemon::Logger.new({})
+    @buffered_logger.auto_flushing.should be_true
   end
 end
