@@ -83,6 +83,7 @@ module Rapns
         ssl_context = OpenSSL::SSL::SSLContext.new
         ssl_context.key = OpenSSL::PKey::RSA.new(Rapns::Daemon.certificate.certificate, Rapns::Daemon.configuration.certificate_password)
         ssl_context.cert = OpenSSL::X509::Certificate.new(Rapns::Daemon.certificate.certificate)
+        OpenSSL::debug = Rapns::Daemon.configuration.openssl_debug
         ssl_context
       end
 

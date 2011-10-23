@@ -13,7 +13,7 @@ describe Rapns::Daemon::Connection, "when setting up the SSL context" do
     @connection = Rapns::Daemon::Connection.new("Connection 1")
     @connection.stub(:connect_socket)
     @connection.stub(:setup_at_exit_hook)
-    configuration = mock("Configuration", :host => "localhost", :port => 123, :certificate_password => "abc123")
+    configuration = mock("Configuration", :host => "localhost", :port => 123, :certificate_password => "abc123", :openssl_debug => true)
     Rapns::Daemon.stub(:configuration).and_return(configuration)
   end
 
