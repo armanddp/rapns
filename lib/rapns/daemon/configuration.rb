@@ -5,7 +5,7 @@ module Rapns
 
   module Daemon
     class Configuration
-      attr_accessor :host, :port, :certificate, :certificate_password, :poll, :airbrake_notify, :connections, :pid_file
+      attr_accessor :host, :port, :certificate, :certificate_password, :poll, :airbrake_notify, :connections, :pid_file, :openssl_debug
       alias_method  :airbrake_notify?, :airbrake_notify
 
       def initialize(environment, config_path)
@@ -25,6 +25,7 @@ module Rapns
         set_variable(:poll, config, :optional => true, :default => 2)
         set_variable(:connections, config, :optional => true, :default => 3)
         set_variable(:pid_file, config, :optional => true, :default => "")
+        set_variable(:openssl_debug, config, :optional => true, :default => false)
       end
 
       def certificate

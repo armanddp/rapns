@@ -6,7 +6,7 @@ describe Rapns::Daemon::Configuration do
 
   before do
     Rails.stub(:root).and_return("/rails_root")
-    @config = {"port" => 123, "host" => "localhost", "certificate" => "production.pem", "certificate_password" => "abc123", "airbrake_notify" => false, "poll" => 4, "connections" => 6, "pid_file" => "rapns.pid"}
+    @config = {"port" => 123, "host" => "localhost", "certificate" => "production.pem", "certificate_password" => "abc123", "airbrake_notify" => false, "poll" => 4, "connections" => 6, "pid_file" => "rapns.pid", "openssl_debug" => true}
   end
 
   it "should raise an error if the configuration file does not exist" do
@@ -143,5 +143,12 @@ describe Rapns::Daemon::Configuration do
     configuration.stub(:read_config).and_return({"production" => @config})
     configuration.load
     configuration.pid_file.should be_nil
+  end
+  
+  it "should set the OpenSSL debug flag if required" do
+    configuration = Rapns::Daemon::Configuration.new("production", "/some/config.yml")
+    configuration.stub(:read_config).and_return({"production" => @config})
+    configuration.load
+    configuration.openssl_debug.should == true
   end
 end
